@@ -25,7 +25,8 @@ function enviarProducto(){
     return {codigo, nombre, cantidad, costo};
 
 }
-botonAgregar.addEventListener("click", function(){
+
+function agregar(){
     let producto = enviarProducto();
     let unico = true;
     if(producto.codigo !== "" && producto.nombre !== "" && producto.cantidad !== "" && producto.costo !== ""){
@@ -51,44 +52,45 @@ botonAgregar.addEventListener("click", function(){
         errores.textContent = "Porfavor completa todos los campos (codigo, nombre, cantidad y costo)";
         informes.textContent = "";
     }    
-})
+}
 
-botonBuscar.addEventListener("click", function(){
-let producto = enviarProducto();
-let codigo = producto.codigo;
-let position;
-let encontrado = false;
-if(codigo !== ""){
-    for(i = 0 ; i < productos.length ; i++){
-        if(codigo == productos[i].Codigo){
-            position = i;
-            encontrado = true;
+function buscar(){
+    let producto = enviarProducto();
+    let codigo = producto.codigo;
+    let position;
+    let encontrado = false;
+    if(codigo !== ""){
+        for(i = 0 ; i < productos.length ; i++){
+            if(codigo == productos[i].Codigo){
+                position = i;
+                encontrado = true;
+            }
+        }
+        if(encontrado){
+            elementos.innerHTML = `
+                        <div class="Producto">
+                    <p>Codigo: ${productos[position].Codigo}<br>
+                        Nombre: ${productos[position].Nombre}<br>
+                        Cantidad: ${productos[position].Cantidad} <br>
+                        Costo: $${productos[position].Costo}</p>
+                </div>`;
+            errores.textContent = "";
+            informes.textContent = "";
+            accciones.innerHTML += `El producto con el codigo ${producto.codigo} ha sido buscado <br>`;
+        }
+        else{
+            errores.textContent = "No se encontro el producto";
+            informes.textContent = "";
         }
     }
-    if(encontrado){
-        elementos.innerHTML = `
-                    <div class="Producto">
-                <p>Codigo: ${productos[position].Codigo}<br>
-                    Nombre: ${productos[position].Nombre}<br>
-                    Cantidad: ${productos[position].Cantidad} <br>
-                    Costo: $${productos[position].Costo}</p>
-            </div>`;
-        errores.textContent = "";
-        informes.textContent = "";
-        accciones.innerHTML += `El producto con el codigo ${producto.codigo} ha sido buscado <br>`;
-    }
-    else{
-        errores.textContent = "No se encontro el producto";
+    else {
+        errores.textContent = "Introduce el codigo para buscar";
         informes.textContent = "";
     }
-}
-else {
-    errores.textContent = "Introduce el codigo para buscar";
-    informes.textContent = "";
+    
 }
 
-})
-botonEliminar.addEventListener("click", function(){
+function eliminar(){
     elementos.innerHTML = "";
     let producto = enviarProducto();
     let codigo = producto.codigo;
@@ -120,15 +122,14 @@ botonEliminar.addEventListener("click", function(){
         errores.textContent = "Introduce el codigo para eliminar";
         informes.textContent = "";
     }
-    })
+}
 
-botonListar.addEventListener("click", function(){
+function listar(){
     elementos.innerHTML = "";
     informes.textContent = "";
     errores.textContent = "";
     if (productos.length !== 0){
         for(let i = 0 ; i < productos.length ; i++){
-            console.log("Hola");
             elementos.innerHTML += `
             <div class="Producto">
                  <p>Codigo: ${productos[i].Codigo}<br>
@@ -143,9 +144,30 @@ botonListar.addEventListener("click", function(){
         errores.textContent = "Aún no hay productos agregados";
         informes.textContent = "";
     }
-})
+}
+function listarInverso(){
+    elementos.innerHTML = "";
+    informes.textContent = "";
+    errores.textContent = "";
+    if (productos.length !== 0){
+        for(let i = productos.length - 1; i >= 0 ; i--){
+            elementos.innerHTML += `
+            <div class="Producto">
+                 <p>Codigo: ${productos[i].Codigo}<br>
+                    Nombre: ${productos[i].Nombre}<br>
+                    Cantidad: ${productos[i].Cantidad} <br>
+                    Costo: $${productos[i].Costo}</p>
+            </div>`;
+        }
+        accciones.innerHTML += `Se listaron todos los elementos de forma inversa<br>`;
+    }
+    else{
+        errores.textContent = "Aún no hay productos agregados";
+        informes.textContent = "";
+    }
+}
 
-botonExtraer.addEventListener("click", function(){
+function extraerPrimero(){
     elementos.innerHTML = `
     <div class="Producto">
          <p>El producto:<br>
@@ -161,12 +183,12 @@ botonExtraer.addEventListener("click", function(){
         productos[j] = productos[i];
     }
     productos.length = productos.length - 1;
-})
+}
 
-botonInsertar.addEventListener("click", function(){
+function insertar(){
     let producto = enviarProducto();
     let unico = true;
-    let posicion = document.getElementById("posicion").value;
+    let posicion = document.getElementById("posicion").value - 1;
     if(producto.codigo !== "" && producto.nombre !== "" && producto.cantidad !== "" && producto.costo !== ""){
         for (i = 0; i < productos.length; i++){
             if(producto.codigo == productos[i].Codigo){
@@ -182,7 +204,7 @@ botonInsertar.addEventListener("click", function(){
                     productos[posicion] = {Codigo : producto.codigo, Nombre : producto.nombre, Cantidad : producto.cantidad, Costo : producto.costo};
                     formulario.reset();
                     elementos.innerHTML = "";
-                    informes.textContent = `Producto insertado con exito en la posicion ${posicion}`;
+                    informes.textContent = `Producto insertado con exito en la posicion ${posicion + 1}`;
                     errores.textContent = "";
                     accciones.innerHTML += `El producto con el codigo ${producto.codigo} ha sido insertado en la posicion ${posicion}<br>`;
                 }
@@ -205,4 +227,21 @@ botonInsertar.addEventListener("click", function(){
         errores.textContent = "Porfavor completa todos los campos (codigo, nombre, cantidad y costo)";
         informes.textContent = "";
     }    
-})
+}
+
+function extraerUltimo (){
+    let ult = productos.length-1;
+    informes.textContent = "";
+    errores.textContent = ""
+    elementos.innerHTML = `
+    <div class="Producto">
+         <p>El producto:<br>
+            Codigo: ${productos[ult].Codigo}<br>
+            Nombre: ${productos[ult].Nombre}<br>
+            Cantidad: ${productos[ult].Cantidad} <br>
+            Costo: $${productos[ult].Costo}<br>
+            Fue eliminado con exito</p>
+    </div>`;
+    accciones.innerHTML += `El primer producto con el codigo ${productos[ult].Codigo} ha sido extraido`;   
+    productos.length = ult;
+}
